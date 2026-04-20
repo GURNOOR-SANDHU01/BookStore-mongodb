@@ -1,0 +1,90 @@
+.books-page { padding: 100px 0 60px; }
+.books-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  gap: 16px;
+}
+.books-title { line-height: 1.2; }
+.books-subtitle { font-size: 0.9rem; color: var(--text-muted); margin-top: 4px; }
+
+.books-search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.books-search-input {
+  flex: 1;
+  padding: 14px 18px 14px 44px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  outline: none;
+  transition: var(--transition);
+}
+.books-search-input:focus { border-color: var(--accent-blue); background: var(--bg-glass-hover); }
+.books-search-input::placeholder { color: var(--text-muted); }
+.books-search-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--text-muted);
+}
+
+.filters-panel {
+  padding: 24px;
+  margin-bottom: 32px;
+}
+.filter-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.filter-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 10px; display: block; }
+.category-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill {
+  padding: 6px 16px;
+  border-radius: 100px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: 'Outfit', sans-serif;
+}
+.pill:hover { border-color: var(--border-accent); color: var(--text-primary); }
+.pill-active {
+  background: rgba(79, 156, 249, 0.2);
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+.price-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.price-inputs input { flex: 1; padding: 10px 12px; }
+
+.books-grid { margin-top: 16px; }
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 60px;
+}
+.page-info { color: var(--text-secondary); font-size: 0.9rem; }
+
+@media (max-width: 900px) {
+  .filter-row { grid-template-columns: 1fr; }
+  .books-header { flex-direction: column; align-items: flex-start; }
+}
