@@ -42,7 +42,7 @@ export default function Orders() {
             <Package size={60} color="var(--text-muted)" />
             <h3>No orders yet</h3>
             <p>Place your first order from the cart!</p>
-            <Link to="/books" className="btn btn-primary">Browse Books</Link>
+            <Link to="/books" className="btn btn-primary" title="Go back to library to shop more">Browse Books</Link>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>

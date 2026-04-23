@@ -42,7 +42,7 @@ export default function Wishlist() {
             <Heart size={60} color="var(--text-muted)" />
             <h3>No books in your wishlist</h3>
             <p>Browse books and click the ❤️ heart to save them here.</p>
-            <Link to="/books" className="btn btn-primary">Browse Books</Link>
+            <Link to="/books" className="btn btn-primary" title="Explore books to add to your wishlist">Browse Books</Link>
           </div>
         ) : (
           <div className="grid grid-4">

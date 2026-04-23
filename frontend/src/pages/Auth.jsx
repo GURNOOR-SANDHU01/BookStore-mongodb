@@ -113,20 +113,21 @@ export default function Auth() {
                 type="button"
                 className="input-right-btn"
                 onClick={() => setShowPass(!showPass)}
+                title={showPass ? 'Hide password' : 'Show password'}
               >
                 {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
           </div>
 
-          <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={loading}>
+          <button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={loading} title={isLogin ? 'Sign in to account' : 'Create new account'}>
             {loading ? 'Please wait...' : isLogin ? 'Sign In' : 'Create Account'}
           </button>
         </form>
 
         <p className="auth-switch">
           {isLogin ? "Don't have an account? " : "Already have an account? "}
-          <button className="link-btn" onClick={() => setIsLogin(!isLogin)}>
+          <button className="link-btn" onClick={() => setIsLogin(!isLogin)} title={isLogin ? 'Switch to Sign Up' : 'Switch to Sign In'}>
             {isLogin ? 'Sign Up' : 'Sign In'}
           </button>
         </p>
