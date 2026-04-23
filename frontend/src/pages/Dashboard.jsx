@@ -105,7 +105,7 @@ export default function Dashboard() {
             <h2>Admin <span className="gradient-text">Dashboard</span></h2>
             <p className="dash-subtitle">MongoDB Aggregation Pipeline Analytics</p>
           </div>
-          <button className="btn btn-primary" onClick={openAdd}>
+          <button className="btn btn-primary" onClick={openAdd} title="Add a new book to the catalog">
             <Plus size={18} /> Add Book
           </button>
         </div>
@@ -117,7 +117,7 @@ export default function Dashboard() {
             {/* Stats */}
             <div className="dash-stats-grid">
               <StatCard icon={TrendingUp} label="Total Revenue"
-                value={`$${analytics?.revenue?.totalRevenue?.toFixed(2) || '0.00'}`}
+                value={`₹${analytics?.revenue?.totalRevenue?.toLocaleString('en-IN') || '0'}`}
                 color="79, 156, 249" />
               <StatCard icon={ShoppingBag} label="Total Orders"
                 value={analytics?.revenue?.totalOrders || 0}
@@ -140,7 +140,7 @@ export default function Dashboard() {
                       <span className="top-rank">#{i + 1}</span>
                       <div className="top-info">
                         <div className="top-title">{b.title}</div>
-                        <div className="top-meta">{b.totalSold} sold • Revenue: ${b.revenue?.toFixed(2)}</div>
+                        <div className="top-meta">{b.totalSold} sold • Revenue: ₹{b.revenue?.toLocaleString('en-IN')}</div>
                       </div>
                       <div className="top-bar-wrap">
                         <div
@@ -182,7 +182,7 @@ export default function Dashboard() {
                           <span>{book.title}</span>
                         </td>
                         <td><span className="badge badge-blue">{book.category}</span></td>
-                        <td>${book.price?.toFixed(2)}</td>
+                        <td>₹{book.price?.toLocaleString('en-IN')}</td>
                         <td>
                           <span className={`stock-indicator ${book.stock <= 5 ? 'low' : 'ok'}`}>
                             {book.stock}
@@ -230,8 +230,8 @@ export default function Dashboard() {
                   <input className="form-input" value={form.author} onChange={e => setForm(f => ({ ...f, author: e.target.value }))} required />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Price ($) *</label>
-                  <input className="form-input" type="number" step="0.01" min="0" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} required />
+                  <label className="form-label">Price (₹) *</label>
+                  <input className="form-input" type="number" step="1" min="0" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} required />
                 </div>
                 <div className="form-group">
                   <label className="form-label">Category *</label>

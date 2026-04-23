@@ -4,7 +4,7 @@ const BOOKS = [
   {
     title: 'The Great Gatsby',
     author: ['F. Scott Fitzgerald'],
-    price: 12.99,
+    price: 999,
     category: 'Fiction',
     stock: 45,
     tags: ['classic', 'rich', 'romance'],
@@ -22,7 +22,7 @@ const BOOKS = [
   {
     title: 'To Kill a Mockingbird',
     author: ['Harper Lee'],
-    price: 10.99,
+    price: 799,
     category: 'Fiction',
     stock: 60,
     tags: ['classic', 'justice', 'childhood'],
@@ -39,7 +39,7 @@ const BOOKS = [
   {
     title: '1984',
     author: ['George Orwell'],
-    price: 9.99,
+    price: 699,
     category: 'Dystopian',
     stock: 35,
     tags: ['classic', 'political', 'surveillance'],
@@ -56,7 +56,7 @@ const BOOKS = [
   {
     title: 'Sapiens: A Brief History of Humankind',
     author: ['Yuval Noah Harari'],
-    price: 16.99,
+    price: 1499,
     category: 'Non-Fiction',
     stock: 50,
     tags: ['history', 'humanity', 'science'],
@@ -71,7 +71,7 @@ const BOOKS = [
   {
     title: 'Atomic Habits',
     author: ['James Clear'],
-    price: 14.99,
+    price: 1299,
     category: 'Self-Help',
     stock: 80,
     tags: ['productivity', 'habits', 'success'],
@@ -88,7 +88,7 @@ const BOOKS = [
   {
     title: 'The Alchemist',
     author: ['Paulo Coelho'],
-    price: 11.99,
+    price: 899,
     category: 'Fiction',
     stock: 40,
     tags: ['adventure', 'inspirational', 'philosophy'],
@@ -103,7 +103,7 @@ const BOOKS = [
   {
     title: 'Clean Code',
     author: ['Robert C. Martin'],
-    price: 29.99,
+    price: 2499,
     category: 'Academic',
     stock: 25,
     tags: ['programming', 'technical', 'best-practices'],
@@ -118,7 +118,7 @@ const BOOKS = [
   {
     title: 'Dune',
     author: ['Frank Herbert'],
-    price: 13.99,
+    price: 1199,
     category: 'Sci-Fi',
     stock: 55,
     tags: ['epic', 'space', 'politics'],
@@ -133,7 +133,7 @@ const BOOKS = [
   {
     title: 'The Power of Now',
     author: ['Eckhart Tolle'],
-    price: 12.49,
+    price: 1049,
     category: 'Self-Help',
     stock: 30,
     tags: ['spirituality', 'mindfulness', 'peace'],
@@ -148,7 +148,7 @@ const BOOKS = [
   {
     title: 'Harry Potter and the Sorcerer\'s Stone',
     author: ['J.K. Rowling'],
-    price: 15.99,
+    price: 1399,
     category: 'Fantasy',
     stock: 100,
     tags: ['magic', 'young-adult', 'adventure'],
@@ -160,6 +160,81 @@ const BOOKS = [
       { user: 'Frank', rating: 5, comment: 'Pure magic!', date: new Date() }
     ],
     totalSold: 500,
+    createdAt: new Date()
+  },
+  {
+    title: 'Deep Work',
+    author: ['Cal Newport'],
+    price: 1150,
+    category: 'Self-Help',
+    stock: 45,
+    tags: ['productivity', 'focus', 'success'],
+    metadata: { pages: 304, publisher: 'Grand Central Publishing', language: 'English' },
+    description: 'Rules for Focused Success in a Distracted World.',
+    image_url: 'https://covers.openlibrary.org/b/id/8282683-L.jpg',
+    ratings: 4.7,
+    reviews: [],
+    totalSold: 210,
+    createdAt: new Date()
+  },
+  {
+    title: 'Project Hail Mary',
+    author: ['Andy Weir'],
+    price: 1599,
+    category: 'Sci-Fi',
+    stock: 40,
+    tags: ['space', 'science', 'adventure'],
+    metadata: { pages: 476, publisher: 'Ballantine Books', language: 'English' },
+    description: 'A lone astronaut must save the earth from disaster in this propulsive SF thriller.',
+    image_url: 'https://covers.openlibrary.org/b/id/10609459-L.jpg',
+    ratings: 4.9,
+    reviews: [],
+    totalSold: 180,
+    createdAt: new Date()
+  },
+  {
+    title: 'The Silent Patient',
+    author: ['Alex Michaelides'],
+    price: 999,
+    category: 'Thriller',
+    stock: 65,
+    tags: ['mystery', 'psychological', 'crime'],
+    metadata: { pages: 336, publisher: 'Celadon Books', language: 'English' },
+    description: 'A shocking psychological thriller of a woman’s act of violence against her husband.',
+    image_url: 'https://covers.openlibrary.org/b/id/10439401-L.jpg',
+    ratings: 4.5,
+    reviews: [],
+    totalSold: 350,
+    createdAt: new Date()
+  },
+  {
+    title: 'Ikigai',
+    author: ['Francesc Miralles', 'Hector Garcia'],
+    price: 850,
+    category: 'Self-Help',
+    stock: 120,
+    tags: ['purpose', 'longevity', 'japanese'],
+    metadata: { pages: 208, publisher: 'Penguin Books', language: 'English' },
+    description: 'The Japanese Secret to a Long and Happy Life.',
+    image_url: 'https://covers.openlibrary.org/b/id/10543632-L.jpg',
+    ratings: 4.6,
+    reviews: [],
+    totalSold: 600,
+    createdAt: new Date()
+  },
+  {
+    title: 'The Psychology of Money',
+    author: ['Morgan Housel'],
+    price: 1099,
+    category: 'Finance',
+    stock: 90,
+    tags: ['investing', 'wealth', 'behavioral'],
+    metadata: { pages: 256, publisher: 'Harriman House', language: 'English' },
+    description: 'Timeless lessons on wealth, greed, and happiness.',
+    image_url: 'https://covers.openlibrary.org/b/id/10398436-L.jpg',
+    ratings: 4.8,
+    reviews: [],
+    totalSold: 420,
     createdAt: new Date()
   }
 ];
@@ -177,7 +252,7 @@ async function seed() {
   const result = await books.insertMany(BOOKS);
   console.log(`✅ Inserted ${result.insertedCount} books`);
 
-  console.log('🌱 Database seeded successfully!');
+  console.log('🌱 Database seeded successfully with Rupees!');
   process.exit(0);
 }
 

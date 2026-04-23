@@ -27,10 +27,10 @@ function HeroSection({ featuredBooks }) {
             Named Best Books of the Year by Library Journal.
           </p>
           <div className="hero-ctas">
-            <Link to="/books" className="btn btn-gold btn-lg">
+            <Link to="/books" className="btn btn-gold btn-lg" title="See our full collection of books">
               Browse All Books <ArrowRight size={16} strokeWidth={2} />
             </Link>
-            <Link to="/auth" className="btn btn-outline btn-lg">
+            <Link to="/auth" className="btn btn-outline btn-lg" title="Create an account or sign in">
               Join Our Community
             </Link>
           </div>
@@ -75,12 +75,12 @@ function BooksSection({ books }) {
           </div>
           <div className="books-section-right">
             <p>Explore hundreds of heartwarming stories about families without boundaries.</p>
-            <Link to="/books" className="btn btn-gold">View All Books</Link>
+            <Link to="/books" className="btn btn-gold" title="Explore all books in our library">View All Books</Link>
             <div className="slider-arrows">
-              <button className="arrow-btn" disabled={!canPrev} onClick={() => setStart(s => Math.max(0, s - 1))}>
+              <button className="arrow-btn" disabled={!canPrev} onClick={() => setStart(s => Math.max(0, s - 1))} title="Previous books">
                 <ChevronLeft size={18} strokeWidth={1.5} />
               </button>
-              <button className="arrow-btn" disabled={!canNext} onClick={() => setStart(s => Math.min(books.length - visible, s + 1))}>
+              <button className="arrow-btn" disabled={!canNext} onClick={() => setStart(s => Math.min(books.length - visible, s + 1))} title="More books">
                 <ChevronRight size={18} strokeWidth={1.5} />
               </button>
             </div>

@@ -74,7 +74,7 @@ export default function Books() {
           <h2 className="books-title">Browse <span className="gradient-text">All Books</span></h2>
           <p className="books-subtitle">{total} books found — MongoDB-powered search & filtering</p>
         </div>
-        <button className="btn btn-ghost" onClick={() => setShowFilters(!showFilters)}>
+        <button className="btn btn-ghost" onClick={() => setShowFilters(!showFilters)} title={showFilters ? 'Hide filters' : 'Show filters'}>
           <SlidersHorizontal size={16} />
           Filters
         </button>
@@ -91,7 +91,7 @@ export default function Books() {
             onChange={e => setFilter('search', e.target.value)}
             className="books-search-input"
           />
-          <button type="submit" className="btn btn-primary btn-sm">Search</button>
+          <button type="submit" className="btn btn-primary btn-sm" title="Search for books">Search</button>
         </form>
 
         {/* Filters Panel */}
@@ -102,18 +102,19 @@ export default function Books() {
                 <label className="form-label">Category</label>
                 <div className="category-pills">
                   {categories.map(c => (
-                    <button
-                      key={c}
-                      className={`pill ${filters.category === c ? 'pill-active' : ''}`}
-                      onClick={() => setFilter('category', c)}
-                    >
-                      {c}
-                    </button>
+                      <button
+                        key={c}
+                        className={`pill ${filters.category === c ? 'pill-active' : ''}`}
+                        onClick={() => setFilter('category', c)}
+                        title={`Filter by ${c}`}
+                      >
+                        {c}
+                      </button>
                   ))}
                 </div>
               </div>
               <div className="filter-group">
-                <label className="form-label">Price Range ($)</label>
+                <label className="form-label">Price Range (₹)</label>
                 <div className="price-inputs">
                   <input type="number" className="form-input" placeholder="Min"
                     value={filters.minPrice} onChange={e => setFilter('minPrice', e.target.value)} />
@@ -160,7 +161,9 @@ export default function Books() {
             <span className="page-info">Page {filters.page} of {pages}</span>
             <button className="btn btn-ghost btn-sm"
               disabled={filters.page >= pages}
-              onClick={() => setFilters(f => ({ ...f, page: f.page + 1 }))}>
+              onClick={() => setFilters(f => ({ ...f, page: f.page + 1 }))}
+              title="Go to next page"
+            >
               Next <ChevronRight size={16} />
             </button>
           </div>

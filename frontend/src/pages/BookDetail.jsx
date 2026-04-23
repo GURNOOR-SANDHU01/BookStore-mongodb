@@ -129,20 +129,22 @@ export default function BookDetail() {
               </div>
             </div>
 
-            <div className="detail-price">${book.price?.toFixed(2)}</div>
+            <div className="detail-price">₹{book.price?.toLocaleString('en-IN')}</div>
 
             <div className="detail-actions">
               <button
                 className="btn btn-primary btn-lg"
                 onClick={() => addToCart(book._id)}
                 disabled={book.stock === 0}
+                title={book.stock === 0 ? 'Out of stock' : 'Add this book to your cart'}
               >
                 <ShoppingCart size={20} />
                 {book.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
               </button>
-              <button
+               <button
                 className="btn btn-ghost btn-lg"
                 onClick={() => toggleWishlist(book._id)}
+                title="Add to your personal wishlist"
               >
                 <Heart size={20} />
                 Wishlist

@@ -26,7 +26,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="navbar-inner container">
         {/* Logo */}
-        <Link to="/" className="navbar-logo">
+        <Link to="/" className="navbar-logo" title="BookStore Home">
           <BookOpen size={20} strokeWidth={1.5} />
           <span>BookStore</span>
         </Link>
@@ -37,9 +37,9 @@ export default function Navbar() {
           <Link to="/books" className={`nav-link ${isActive('/books') ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Books</Link>
           {user && (
             <>
-              <Link to="/wishlist" className={`nav-link ${isActive('/wishlist') ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Wishlist</Link>
-              <Link to="/orders" className={`nav-link ${isActive('/orders') ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>My Orders</Link>
-              <Link to="/dashboard" className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>Admin</Link>
+              <Link to="/wishlist" className={`nav-link ${isActive('/wishlist') ? 'active' : ''}`} onClick={() => setMenuOpen(false)} title="View your saved books">Wishlist</Link>
+              <Link to="/orders" className={`nav-link ${isActive('/orders') ? 'active' : ''}`} onClick={() => setMenuOpen(false)} title="View your order history">My Orders</Link>
+              <Link to="/dashboard" className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`} onClick={() => setMenuOpen(false)} title="Admin Management Dashboard">Admin</Link>
             </>
           )}
         </div>

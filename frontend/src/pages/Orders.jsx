@@ -65,7 +65,7 @@ export default function Orders() {
                         {order.status}
                       </span>
                       <span style={{ fontSize: '1.3rem', fontWeight: 800, background: 'var(--gradient-primary)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                        ${order.total_price?.toFixed(2)}
+                        ₹{order.total_price?.toLocaleString('en-IN')}
                       </span>
                     </div>
                   </div>

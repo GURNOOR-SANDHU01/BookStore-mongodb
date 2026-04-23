@@ -49,7 +49,7 @@ export default function BookCard({ book, minimal = false }) {
         )}
         {!minimal && (
           <div className="book-bottom">
-            <span className="book-price">${book.price?.toFixed(2)}</span>
+            <span className="book-price">₹{book.price?.toLocaleString('en-IN')}</span>
             <div className="book-stars">
               {[1,2,3,4,5].map(i => (
                 <Star key={i} size={11} strokeWidth={1}
