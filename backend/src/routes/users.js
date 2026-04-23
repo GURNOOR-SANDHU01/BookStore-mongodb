@@ -137,4 +137,31 @@ router.get('/wishlist', auth, async (req, res) => {
   }
 });
 
+// PATCH /api/users/profile - Update profile (demonstrating $set, $unset, $currentDate)
+router.patch('/profile', auth, async (req, res) => {
+  try {
+    const db = getDB();
+    const { name, phone, removePhone } = req.body;
+    
+    const update = { $set: {}, $unset: {}, $currentDate: { updatedAt: true } };
+    
+    if (name) update.$set.name = name;
+    if (phone) update.$set.phone = phone;
+    if (removePhone) update.$unset.phone = "";
+
+    // Clean up empty operators
+    if (Object.keys(update.$set).length === 0) delete update.$set;
+    if (Object.keys(update.$unset).length === 0) delete update.$unset;
+
+    await db.collection('users').updateOne(
+      { _id: new ObjectId(req.user.userId) },
+      update
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
+

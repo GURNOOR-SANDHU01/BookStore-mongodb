@@ -6,19 +6,30 @@ let client;
 
 async function connectDB() {
   if (db) return db;
-  client = new MongoClient(process.env.MONGODB_URI);
-  await client.connect();
-  db = client.db(process.env.DB_NAME);
+  
+  try {
+    client = new MongoClient(process.env.MONGODB_URI, {
+      connectTimeoutMS: 10000,
+      serverSelectionTimeoutMS: 10000,
+    });
+    
+    await client.connect();
+    db = client.db(process.env.DB_NAME || 'bookstore');
 
-  // Create indexes for fast search and text search
-  await db.collection('books').createIndex({ title: 'text', author: 'text', description: 'text' });
-  await db.collection('books').createIndex({ category: 1 });
-  await db.collection('books').createIndex({ price: 1 });
-  await db.collection('books').createIndex({ createdAt: -1 });
-  await db.collection('users').createIndex({ email: 1 }, { unique: true });
+    // Create indexes for fast search and text search
+    await db.collection('books').createIndex({ title: 'text', author: 'text', description: 'text' });
+    await db.collection('books').createIndex({ category: 1 });
+    await db.collection('books').createIndex({ price: 1 });
+    await db.collection('books').createIndex({ createdAt: -1 });
+    await db.collection('books').createIndex({ category: 1, price: 1 }); // Compound Index
+    await db.collection('users').createIndex({ email: 1 }, { unique: true });
 
-  console.log('✅ Connected to MongoDB and indexes created');
-  return db;
+    console.log('✅ Connected to MongoDB Atlas and indexes verified');
+    return db;
+  } catch (err) {
+    console.error('❌ MongoDB Connection Error:', err.message);
+    throw err;
+  }
 }
 
 function getDB() {

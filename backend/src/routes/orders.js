@@ -130,4 +130,49 @@ router.put('/:id/status', auth, async (req, res) => {
   }
 });
 
+// GET /api/orders/:id/detailed - Order with joined book details (Section 6: $lookup)
+router.get('/:id/detailed', auth, async (req, res) => {
+  try {
+    const db = getDB();
+    const order = await db.collection('orders').aggregate([
+      { $match: { _id: new ObjectId(req.params.id) } },
+      { $unwind: '$books' },
+      {
+        $lookup: {
+          from: 'books',
+          localField: 'books.bookId',
+          foreignField: '_id',
+          as: 'bookDetails'
+        }
+      },
+      { $unwind: '$bookDetails' },
+      {
+        $group: {
+          _id: '$_id',
+          userId: { $first: '$userId' },
+          total_price: { $first: '$total_price' },
+          status: { $first: '$status' },
+          created_at: { $first: '$created_at' },
+          books: {
+            $push: {
+              bookId: '$books.bookId',
+              quantity: '$books.quantity',
+              price: '$books.price',
+              title: '$bookDetails.title',
+              image_url: '$bookDetails.image_url',
+              category: '$bookDetails.category'
+            }
+          }
+        }
+      }
+    ]).toArray();
+
+    if (order.length === 0) return res.status(404).json({ error: 'Order not found' });
+    res.json(order[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
+

@@ -9,6 +9,7 @@ router.get('/', async (req, res) => {
     const db = getDB();
     const { 
       search, category, minPrice, maxPrice, 
+      tags, language,
       page = 1, limit = 12, sort = 'createdAt' 
     } = req.query;
 
@@ -37,6 +38,17 @@ router.get('/', async (req, res) => {
       query.price = {};
       if (minPrice) query.price.$gte = parseFloat(minPrice);
       if (maxPrice) query.price.$lte = parseFloat(maxPrice);
+    }
+
+    // $all operator for tags (Section 3 of Notes)
+    if (tags) {
+      const tagArray = Array.isArray(tags) ? tags : tags.split(',');
+      query.tags = { $all: tagArray };
+    }
+
+    // Nested Document query (Section 4 of Notes)
+    if (language) {
+      query["metadata.language"] = language;
     }
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
@@ -83,6 +95,35 @@ router.get('/top-sold', async (req, res) => {
   }
 });
 
+// GET /api/books/stats/category - Complex aggregation (Section 6 of Notes)
+router.get('/stats/category', async (req, res) => {
+  try {
+    const db = getDB();
+    const stats = await db.collection('books').aggregate([
+      {
+        $group: {
+          _id: '$category',
+          avgPrice: { $avg: '$price' },
+          totalBooks: { $sum: 1 },
+          totalStock: { $sum: '$stock' },
+          maxPrice: { $max: '$price' }
+        }
+      },
+      { $sort: { totalBooks: -1 } },
+      { $project: { 
+          category: '$_id', 
+          avgPrice: { $round: ['$avgPrice', 2] }, 
+          totalBooks: 1, 
+          totalStock: 1,
+          isPopular: { $gt: ['$totalBooks', 2] }
+      } }
+    ]).toArray();
+    res.json(stats);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/books/:id - single book
 router.get('/:id', async (req, res) => {
   try {
@@ -112,11 +153,31 @@ router.put('/:id', async (req, res) => {
   try {
     const db = getDB();
     const { _id, ...update } = req.body;
+    
+    // Demonstrate $currentDate and $set (Section 2 of Notes)
     await db.collection('books').updateOne(
       { _id: new ObjectId(req.params.id) },
-      { $set: update }
+      { 
+        $set: update,
+        $currentDate: { lastUpdated: true } 
+      }
     );
     res.json({ updated: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// PATCH /api/books/:id/rename - Demonstrate $rename (Section 2 of Notes)
+router.patch('/:id/rename', async (req, res) => {
+  try {
+    const db = getDB();
+    const { oldName, newName } = req.body;
+    await db.collection('books').updateOne(
+      { _id: new ObjectId(req.params.id) },
+      { $rename: { [oldName]: newName } }
+    );
+    res.json({ renamed: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
