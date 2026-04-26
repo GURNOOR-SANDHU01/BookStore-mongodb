@@ -41,7 +41,7 @@ router.post('/', auth, async (req, res) => {
         userId: new ObjectId(req.user.userId),
         books: orderBooks,
         total_price: Math.round(totalPrice * 100) / 100,
-        status: 'pending',
+        status: 'ordered',
         created_at: new Date()
       };
       const result = await db.collection('orders').insertOne(order, { session });

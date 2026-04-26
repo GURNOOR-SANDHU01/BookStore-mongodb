@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Package, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Package, Clock, CheckCircle, XCircle, Book } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 
-const STATUS_ICONS = { pending: Clock, confirmed: CheckCircle, cancelled: XCircle };
-const STATUS_COLORS = { pending: 'badge-gold', confirmed: 'badge-teal', cancelled: 'badge-pink' };
+const STATUS_ICONS = { ordered: CheckCircle, pending: Clock, confirmed: CheckCircle, cancelled: XCircle };
+const STATUS_COLORS = { ordered: 'badge-teal', pending: 'badge-gold', confirmed: 'badge-teal', cancelled: 'badge-pink' };
 
 export default function Orders() {
   const { API, authHeaders, token, user } = useApp();
@@ -76,7 +76,7 @@ export default function Orders() {
                         background: 'var(--bg-glass)', border: '1px solid var(--border-color)',
                         borderRadius: 'var(--radius-sm)', padding: '8px 14px'
                       }}>
-                        <BookOpen size={14} color="var(--accent-blue)" />
+                        <Book size={14} color="var(--accent-blue)" />
                         <span style={{ fontSize: '0.85rem' }}>{b.title}</span>
                         <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>×{b.quantity}</span>
                       </div>

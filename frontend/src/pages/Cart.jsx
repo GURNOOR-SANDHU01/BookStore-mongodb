@@ -52,13 +52,51 @@ export default function Cart() {
           >
             <motion.div 
               className="success-content"
-              initial={{ scale: 0.5, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              transition={{ type: "spring", damping: 12 }}
+              initial={{ scale: 0.5, y: 50, rotate: -5 }}
+              animate={{ scale: 1, y: 0, rotate: 0 }}
+              transition={{ type: "spring", damping: 10, stiffness: 100 }}
             >
-              <CheckCircle size={80} color="var(--accent-teal)" />
-              <h2>Order Placed!</h2>
-              <p>Your books are on the way.</p>
+              <div className="success-icon-wrapper">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1.2 }}
+                  transition={{ delay: 0.2, type: "spring" }}
+                >
+                  <CheckCircle size={100} color="var(--accent-teal)" strokeWidth={3} />
+                </motion.div>
+                <div className="success-glow" />
+              </div>
+              <motion.h2
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                Order Placed Successfully!
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+              >
+                Thank you for your purchase. <br />
+                Redirecting to your order history...
+              </motion.p>
+              
+              {/* Decorative particles */}
+              {[...Array(6)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="success-particle"
+                  initial={{ x: 0, y: 0, opacity: 1 }}
+                  animate={{ 
+                    x: (Math.random() - 0.5) * 400, 
+                    y: (Math.random() - 0.5) * 400,
+                    opacity: 0,
+                    scale: 0
+                  }}
+                  transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+                />
+              ))}
             </motion.div>
           </motion.div>
         )}
