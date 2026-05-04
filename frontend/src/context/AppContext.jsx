@@ -78,6 +78,14 @@ export function AppProvider({ children }) {
     } catch (e) { toast(e.response?.data?.error || 'Error', 'error'); }
   };
 
+  const updateCartQuantity = async (bookId, delta) => {
+    if (!token) return;
+    try {
+      await axios.post(`${API}/users/cart/add`, { bookId, quantity: delta }, authHeaders());
+      await fetchCart();
+    } catch (e) { toast(e.response?.data?.error || 'Error updating quantity', 'error'); }
+  };
+
   const removeFromCart = async (bookId) => {
     try {
       await axios.post(`${API}/users/cart/remove`, { bookId }, authHeaders());
@@ -114,7 +122,7 @@ export function AppProvider({ children }) {
     <AppContext.Provider value={{
       user, token, cart, cartCount, toasts,
       login, register, logout,
-      addToCart, removeFromCart, fetchCart,
+      addToCart, updateCartQuantity, removeFromCart, fetchCart,
       toggleWishlist, placeOrder,
       toast, API, authHeaders
     }}>

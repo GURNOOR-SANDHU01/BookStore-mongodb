@@ -45,7 +45,31 @@
 .cart-item-title:hover { color: var(--accent-blue); }
 .cart-item-author { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px; }
 .cart-item-meta { display: flex; align-items: center; gap: 12px; }
-.cart-qty { font-size: 0.82rem; color: var(--text-secondary); }
+.cart-qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 20px;
+  padding: 2px 6px;
+}
+.cart-qty-controls button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: unset;
+}
+.cart-qty-controls .cart-qty {
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
 
 .cart-item-right {
   display: flex;

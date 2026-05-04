@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ShoppingCart, Trash2, ArrowRight, Package, CheckCircle } from 'lucide-react';
+import { ShoppingCart, Trash2, ArrowRight, Package, CheckCircle, Plus, Minus } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../context/AppContext';
 import './Cart.css';
 
 export default function Cart() {
-  const { cart, removeFromCart, placeOrder, user, fetchCart } = useApp();
+  const { cart, removeFromCart, placeOrder, user, fetchCart, updateCartQuantity } = useApp();
   const [placing, setPlacing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
@@ -135,7 +135,23 @@ export default function Cart() {
                     </p>
                     <div className="cart-item-meta">
                       <span className="badge badge-blue">{item.book?.category}</span>
-                      <span className="cart-qty">Qty: {item.quantity}</span>
+                      <div className="cart-qty-controls">
+                        <button 
+                          className="btn btn-icon btn-ghost btn-sm" 
+                          onClick={() => item.quantity > 1 ? updateCartQuantity(item.bookId?.toString(), -1) : removeFromCart(item.bookId?.toString())}
+                          title="Decrease quantity"
+                        >
+                          <Minus size={14} />
+                        </button>
+                        <span className="cart-qty">{item.quantity}</span>
+                        <button 
+                          className="btn btn-icon btn-ghost btn-sm" 
+                          onClick={() => updateCartQuantity(item.bookId?.toString(), 1)}
+                          title="Increase quantity"
+                        >
+                          <Plus size={14} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                   <div className="cart-item-right">
