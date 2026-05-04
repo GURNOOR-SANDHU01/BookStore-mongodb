@@ -4,18 +4,18 @@ const { getDB, getClient } = require('../db');
 const { ObjectId } = require('mongodb');
 const auth = require('../middleware/auth');
 
-// POST /api/orders - Place order (with MongoDB transaction)
+
 router.post('/', auth, async (req, res) => {
   const client = getClient();
   const session = client.startSession();
   try {
     const db = getDB();
-    const { books } = req.body; // [{ bookId, quantity }]
+    const { books } = req.body; 
 
     let totalPrice = 0;
     const orderBooks = [];
 
-    // Use transaction to atomically place order + decrement stock
+  
     await session.withTransaction(async () => {
       for (const item of books) {
         const book = await db.collection('books').findOne(
@@ -28,7 +28,7 @@ router.post('/', auth, async (req, res) => {
         totalPrice += book.price * item.quantity;
         orderBooks.push({ bookId: new ObjectId(item.bookId), title: book.title, quantity: item.quantity, price: book.price });
 
-        // $inc to reduce stock atomically
+       
         await db.collection('books').updateOne(
           { _id: new ObjectId(item.bookId) },
           { $inc: { stock: -item.quantity, totalSold: item.quantity } },
@@ -36,7 +36,7 @@ router.post('/', auth, async (req, res) => {
         );
       }
 
-      // insertOne - place the order
+     
       const order = {
         userId: new ObjectId(req.user.userId),
         books: orderBooks,
@@ -46,14 +46,14 @@ router.post('/', auth, async (req, res) => {
       };
       const result = await db.collection('orders').insertOne(order, { session });
 
-      // Add order reference to user orders array
+     
       await db.collection('users').updateOne(
         { _id: new ObjectId(req.user.userId) },
         { $push: { orders: result.insertedId } },
         { session }
       );
 
-      // Clear user cart
+   
       await db.collection('users').updateOne(
         { _id: new ObjectId(req.user.userId) },
         { $set: { cart: [] } },
@@ -69,7 +69,7 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
-// GET /api/orders/my - Get logged-in user orders
+
 router.get('/my', auth, async (req, res) => {
   try {
     const db = getDB();
@@ -83,25 +83,25 @@ router.get('/my', auth, async (req, res) => {
   }
 });
 
-// GET /api/orders/analytics - Revenue & top selling books aggregation
+
 router.get('/analytics', auth, async (req, res) => {
   try {
     const db = getDB();
 
-    // Total revenue aggregation
+   
     const revenueAgg = await db.collection('orders').aggregate([
       { $group: { _id: null, totalRevenue: { $sum: '$total_price' }, totalOrders: { $sum: 1 } } }
     ]).toArray();
 
-    // Top selling books aggregation
+   
     const topSelling = await db.collection('orders').aggregate([
       { $unwind: '$books' },
-      { $group: { _id: '$books.bookId', title: { $first: '$books.title' }, totalSold: { $sum: '$books.quantity' }, revenue: { $sum: { $multiply: ['$books.price', '$books.quantity'] } } } },
+      { $group: { _id: '$books.title', title: { $first: '$books.title' }, totalSold: { $sum: '$books.quantity' }, revenue: { $sum: { $multiply: ['$books.price', '$books.quantity'] } } } },
       { $sort: { totalSold: -1 } },
       { $limit: 5 }
     ]).toArray();
 
-    // Orders by status
+    
     const byStatus = await db.collection('orders').aggregate([
       { $group: { _id: '$status', count: { $sum: 1 } } }
     ]).toArray();
@@ -116,7 +116,7 @@ router.get('/analytics', auth, async (req, res) => {
   }
 });
 
-// PUT /api/orders/:id/status - Update order status (Admin)
+
 router.put('/:id/status', auth, async (req, res) => {
   try {
     const db = getDB();
@@ -130,7 +130,7 @@ router.put('/:id/status', auth, async (req, res) => {
   }
 });
 
-// GET /api/orders/:id/detailed - Order with joined book details (Section 6: $lookup)
+
 router.get('/:id/detailed', auth, async (req, res) => {
   try {
     const db = getDB();

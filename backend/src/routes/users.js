@@ -4,7 +4,7 @@ const { getDB } = require('../db');
 const { ObjectId } = require('mongodb');
 const auth = require('../middleware/auth');
 
-// GET /api/users/profile
+
 router.get('/profile', auth, async (req, res) => {
   try {
     const db = getDB();
@@ -12,25 +12,29 @@ router.get('/profile', auth, async (req, res) => {
       { _id: new ObjectId(req.user.userId) },
       { projection: { password: 0 } }
     );
+    if (!user) return res.status(404).json({ error: 'User not found' });
     res.json(user);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// POST /api/users/cart/add - Add to cart using $push / $addToSet
+
 router.post('/cart/add', auth, async (req, res) => {
   try {
     const db = getDB();
     const { bookId, quantity = 1 } = req.body;
 
-    // Check if already in cart, if so $inc qty
-    const user = await db.collection('users').findOne({
+    const userExists = await db.collection('users').findOne({ _id: new ObjectId(req.user.userId) });
+    if (!userExists) return res.status(404).json({ error: 'User not found' });
+
+    
+    const inCart = await db.collection('users').findOne({
       _id: new ObjectId(req.user.userId),
       'cart.bookId': new ObjectId(bookId)
     });
 
-    if (user) {
+    if (inCart) {
       await db.collection('users').updateOne(
         { _id: new ObjectId(req.user.userId), 'cart.bookId': new ObjectId(bookId) },
         { $inc: { 'cart.$.quantity': quantity } }
@@ -47,7 +51,7 @@ router.post('/cart/add', auth, async (req, res) => {
   }
 });
 
-// POST /api/users/cart/remove - Remove from cart using $pull
+
 router.post('/cart/remove', auth, async (req, res) => {
   try {
     const db = getDB();
@@ -61,7 +65,7 @@ router.post('/cart/remove', auth, async (req, res) => {
   }
 });
 
-// GET /api/users/cart
+
 router.get('/cart', auth, async (req, res) => {
   try {
     const db = getDB();
@@ -70,9 +74,10 @@ router.get('/cart', auth, async (req, res) => {
       { projection: { cart: 1 } }
     );
 
+    if (!user) return res.status(404).json({ error: 'User not found' });
     if (!user.cart || user.cart.length === 0) return res.json([]);
 
-    // Fetch book details for each cart item
+    
     const bookIds = user.cart.map(c => c.bookId);
     const books = await db.collection('books').find({ _id: { $in: bookIds } }).toArray();
 
@@ -87,7 +92,7 @@ router.get('/cart', auth, async (req, res) => {
   }
 });
 
-// POST /api/users/wishlist/toggle - $addToSet or $pull
+
 router.post('/wishlist/toggle', auth, async (req, res) => {
   try {
     const db = getDB();
@@ -98,17 +103,19 @@ router.post('/wishlist/toggle', auth, async (req, res) => {
       { projection: { wishlist: 1 } }
     );
 
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
     const inWishlist = user.wishlist && user.wishlist.some(id => id.toString() === bookId);
 
     if (inWishlist) {
-      // $pull - remove from wishlist
+      
       await db.collection('users').updateOne(
         { _id: new ObjectId(req.user.userId) },
         { $pull: { wishlist: new ObjectId(bookId) } }
       );
       res.json({ wishlisted: false });
     } else {
-      // $addToSet - add (no duplicates)
+     
       await db.collection('users').updateOne(
         { _id: new ObjectId(req.user.userId) },
         { $addToSet: { wishlist: new ObjectId(bookId) } }
@@ -120,7 +127,7 @@ router.post('/wishlist/toggle', auth, async (req, res) => {
   }
 });
 
-// GET /api/users/wishlist
+
 router.get('/wishlist', auth, async (req, res) => {
   try {
     const db = getDB();
@@ -129,6 +136,7 @@ router.get('/wishlist', auth, async (req, res) => {
       { projection: { wishlist: 1 } }
     );
 
+    if (!user) return res.status(404).json({ error: 'User not found' });
     if (!user.wishlist || !user.wishlist.length) return res.json([]);
     const books = await db.collection('books').find({ _id: { $in: user.wishlist } }).toArray();
     res.json(books);
@@ -137,7 +145,7 @@ router.get('/wishlist', auth, async (req, res) => {
   }
 });
 
-// PATCH /api/users/profile - Update profile (demonstrating $set, $unset, $currentDate)
+
 router.patch('/profile', auth, async (req, res) => {
   try {
     const db = getDB();
@@ -149,14 +157,16 @@ router.patch('/profile', auth, async (req, res) => {
     if (phone) update.$set.phone = phone;
     if (removePhone) update.$unset.phone = "";
 
-    // Clean up empty operators
+    
     if (Object.keys(update.$set).length === 0) delete update.$set;
     if (Object.keys(update.$unset).length === 0) delete update.$unset;
 
-    await db.collection('users').updateOne(
+    const result = await db.collection('users').updateOne(
       { _id: new ObjectId(req.user.userId) },
       update
     );
+    
+    if (result.matchedCount === 0) return res.status(404).json({ error: 'User not found' });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });

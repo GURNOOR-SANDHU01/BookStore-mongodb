@@ -3,7 +3,7 @@ const router = express.Router();
 const { getDB } = require('../db');
 const { ObjectId } = require('mongodb');
 
-// GET /api/books - List books with search, filter, and pagination
+
 router.get('/', async (req, res) => {
   try {
     const db = getDB();
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 
     const query = {};
 
-    // $regex for title/author search
+    
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: 'i' } },
@@ -23,9 +23,9 @@ router.get('/', async (req, res) => {
       ];
     }
 
-    // Text index search (if no regex search)
+   
     if (!search) {
-      // category filter using find()
+    
       if (category && category !== 'All') {
         query.category = category;
       }
@@ -33,20 +33,20 @@ router.get('/', async (req, res) => {
       query.category = category;
     }
 
-    // $gte/$lte price filter
+  
     if (minPrice || maxPrice) {
       query.price = {};
       if (minPrice) query.price.$gte = parseFloat(minPrice);
       if (maxPrice) query.price.$lte = parseFloat(maxPrice);
     }
 
-    // $all operator for tags (Section 3 of Notes)
+
     if (tags) {
       const tagArray = Array.isArray(tags) ? tags : tags.split(',');
       query.tags = { $all: tagArray };
     }
 
-    // Nested Document query (Section 4 of Notes)
+
     if (language) {
       query["metadata.language"] = language;
     }
@@ -69,7 +69,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/books/categories - distinct categories
+
 router.get('/categories', async (req, res) => {
   try {
     const db = getDB();
@@ -80,7 +80,7 @@ router.get('/categories', async (req, res) => {
   }
 });
 
-// GET /api/books/top-sold - top selling books (aggregation)
+
 router.get('/top-sold', async (req, res) => {
   try {
     const db = getDB();
@@ -95,7 +95,7 @@ router.get('/top-sold', async (req, res) => {
   }
 });
 
-// GET /api/books/stats/category - Complex aggregation (Section 6 of Notes)
+
 router.get('/stats/category', async (req, res) => {
   try {
     const db = getDB();
@@ -124,7 +124,7 @@ router.get('/stats/category', async (req, res) => {
   }
 });
 
-// GET /api/books/:id - single book
+
 router.get('/:id', async (req, res) => {
   try {
     const db = getDB();
@@ -136,7 +136,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// POST /api/books - Add new book (Admin)
+
 router.post('/', async (req, res) => {
   try {
     const db = getDB();
@@ -148,13 +148,13 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT /api/books/:id - Update book (Admin)
+
 router.put('/:id', async (req, res) => {
   try {
     const db = getDB();
     const { _id, ...update } = req.body;
     
-    // Demonstrate $currentDate and $set (Section 2 of Notes)
+    
     await db.collection('books').updateOne(
       { _id: new ObjectId(req.params.id) },
       { 
@@ -168,7 +168,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// PATCH /api/books/:id/rename - Demonstrate $rename (Section 2 of Notes)
+
 router.patch('/:id/rename', async (req, res) => {
   try {
     const db = getDB();
@@ -183,7 +183,7 @@ router.patch('/:id/rename', async (req, res) => {
   }
 });
 
-// DELETE /api/books/:id - Delete book (Admin)
+
 router.delete('/:id', async (req, res) => {
   try {
     const db = getDB();
@@ -194,7 +194,7 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// POST /api/books/:id/review - Add review using $push
+
 router.post('/:id/review', async (req, res) => {
   try {
     const db = getDB();
@@ -206,7 +206,7 @@ router.post('/:id/review', async (req, res) => {
       { $push: { reviews: newReview } }
     );
 
-    // Recalculate average rating using aggregation
+   
     const agg = await db.collection('books').aggregate([
       { $match: { _id: new ObjectId(req.params.id) } },
       { $unwind: '$reviews' },

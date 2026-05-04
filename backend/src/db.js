@@ -16,12 +16,12 @@ async function connectDB() {
     await client.connect();
     db = client.db(process.env.DB_NAME || 'bookstore');
 
-    // Create indexes for fast search and text search
+   
     await db.collection('books').createIndex({ title: 'text', author: 'text', description: 'text' });
     await db.collection('books').createIndex({ category: 1 });
     await db.collection('books').createIndex({ price: 1 });
     await db.collection('books').createIndex({ createdAt: -1 });
-    await db.collection('books').createIndex({ category: 1, price: 1 }); // Compound Index
+    await db.collection('books').createIndex({ category: 1, price: 1 });
     await db.collection('users').createIndex({ email: 1 }, { unique: true });
 
     console.log('✅ Connected to MongoDB Atlas and indexes verified');
